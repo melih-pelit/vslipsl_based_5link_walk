@@ -1,4 +1,4 @@
-function rec_pass = force_test(x_direction, plus_direction, F_start, batch_size, force_step_size, enable_VSLIPSL_in_controller)
+function rec_pass = force_test(x_direction, plus_direction, F_start, batch_size, force_step_size, enable_VSLIPSL_in_controller, dist_time)
 
 %% SLIP Data
 
@@ -167,7 +167,7 @@ while true
         rec_pass(i,:) = [NaN, F_x, F_y]; % [pass/fail, F_x, F_y, time_end]
     
         in(i) = Simulink.SimulationInput('model_5LinkWalking');
-        in(i) = in(i).setVariable('f_dist', [1; F_x; F_y; 10.1; 10.2]);
+        in(i) = in(i).setVariable('f_dist', [1; F_x; F_y; dist_time(1); dist_time(2)]);
         in(i) = in(i).setVariable('enable_VSLIPSL_in_controller', enable_VSLIPSL_in_controller);
         
         % constant workspace variables

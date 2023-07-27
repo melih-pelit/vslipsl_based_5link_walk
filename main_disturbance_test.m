@@ -10,8 +10,9 @@ dist_test.date_time = datestr(now,'yyyy-mm-dd-HH-MM');
 dist_test.enable_VSLIPSL_in_controller = true;
 %% Do a force test in a certain direction until the fail point has been found
 F_start = [0; 0];
-dist_test.batch_size = 8;
-dist_test.force_step_size = 10;  % [N]
+dist_test.batch_size = 24;
+dist_test.force_step_size = 1;  % [N]
+dist_test.time = [9.6, 9.7];
 
 %%
 x_direction = true;
@@ -22,7 +23,8 @@ current_test_record_plus = force_test( ...
     F_start, ...
     dist_test.batch_size, ...
     dist_test.force_step_size, ...
-    dist_test.enable_VSLIPSL_in_controller);
+    dist_test.enable_VSLIPSL_in_controller, ...
+    dist_test.time);
 
 %%
 plus_direction = false;
@@ -32,7 +34,8 @@ current_test_record_minus = force_test( ...
     F_start, ...
     dist_test.batch_size, ...
     dist_test.force_step_size, ...
-    dist_test.enable_VSLIPSL_in_controller);
+    dist_test.enable_VSLIPSL_in_controller, ...
+    dist_test.time);
 
 %%
 dist_test.F_x_starts = current_test_record_minus(end-1,2):dist_test.force_step_size:current_test_record_plus(end-1,2);
@@ -52,7 +55,8 @@ for i = 1:length(dist_test.F_x_starts)
         F_start, ...
         dist_test.batch_size, ...
         dist_test.force_step_size, ...
-        dist_test.enable_VSLIPSL_in_controller)];
+        dist_test.enable_VSLIPSL_in_controller, ...
+        dist_test.time)];
 
     plus_direction = false;
     dist_test.results = [dist_test.results; force_test( ...
@@ -61,10 +65,13 @@ for i = 1:length(dist_test.F_x_starts)
         F_start, ...
         dist_test.batch_size, ...
         dist_test.force_step_size, ...
-        dist_test.enable_VSLIPSL_in_controller)];
+        dist_test.enable_VSLIPSL_in_controller, ...
+        dist_test.time)];
 
     save_disturbance_test_result(dist_test)
 end
+
+toc
 %% plotting
 figure()
 hold on
@@ -77,6 +84,7 @@ for i = 1:length(dist_test.results)
 end
 %%
 save_disturbance_test_result(dist_test)
+
 %%
 function save_disturbance_test_result(dist_test)
     subfolder = "disturbance_test_results";
